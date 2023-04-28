@@ -15,4 +15,3 @@ class TradeSimulator:
 
     def get_noise_count(self) -> int:
         pass
-

@@ -5,7 +5,7 @@ poetry-setup:
 format:
 	poetry run isort .
 	poetry run black .
-	poetry run pflake8 .
+	poetry run pflake8 trade_simulator/*
 
 .PHONY: run
 run:
