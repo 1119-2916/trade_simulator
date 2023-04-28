@@ -13,5 +13,16 @@ class TradeSimulator:
     def get_chart_head(self, lines: int) -> list:
         return self.chart[:lines]
 
-    def get_noise_count(self) -> int:
-        pass
+    def get_noise_count(self) -> dict[int, int]:
+        noise = {}
+        for line in self.chart:
+            cnt = noise.get(len(line), 0)
+            noise[len(line)] = cnt + 1
+
+        return noise
+
+    def get_chart_line_count(self) -> int:
+        return len(self.chart)
+
+
+
