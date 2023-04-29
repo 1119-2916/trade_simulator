@@ -14,3 +14,7 @@ run:
 .PHONY: export
 export:
 	poetry export -f requirements.txt --output requirements.txt --without-hashes
+
+.PHONY: test
+test:
+	poetry run pytest
