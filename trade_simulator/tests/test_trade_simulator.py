@@ -21,6 +21,16 @@ def test_read_csv():
     ]
 
 
+def test_get_olhcv():
+    ts = TradeSimulator()
+    ts.read_csv("tests/fixture/btc_usd.csv")
+    format = "%Y-%m-%d %H:%M:%S"
+    time = datetime.strptime("2023-04-27 23:39:00", format)
+    target = ts.get_OLHCV(time)
+
+    assert target.unix_time == 1682638740
+
+
 def test_generate_collect_OLHCV():
     ut = 123456789
     t = datetime(year=1111, month=12, day=13, hour=14, minute=15, second=16)
@@ -30,7 +40,7 @@ def test_generate_collect_OLHCV():
     lo = 1000
     hi = 2000
     cl = 1222
-    vl = 101010
+    vl = 10.1010
 
     collect = OLHCV(
         unix_time=ut, time=t, symbol=sym, open=op, low=lo, high=hi, close=cl, volume=vl

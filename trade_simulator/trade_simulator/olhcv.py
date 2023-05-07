@@ -11,4 +11,4 @@ class OLHCV:
     low: int
     high: int
     close: int
-    volume: int
+    volume: float

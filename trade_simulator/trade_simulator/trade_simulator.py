@@ -7,6 +7,8 @@ from .olhcv import OLHCV
 class TradeSimulator:
     def __init__(self, input_path: str = None, olhcv_list: list[OLHCV] = None) -> None:
         # csv 読み込みと olhcv リスト注入だと後者が優先される
+        self.olhcvs = None
+        self.chart = None
         if input_path is not None:  # test fixture 導入までは引数 None を認める
             self.read_csv(input_path=input_path)
         if olhcv_list is not None:
@@ -19,13 +21,15 @@ class TradeSimulator:
             self.chart.pop(0)  # 先頭行はカラム名なので除去
 
     def set_OLHCV_list(self, olhcvs: list[OLHCV]) -> None:
-        self.olhcv = olhcvs
+        self.olhcvs = olhcvs
 
     def get_all_chart(self) -> list[list]:
         return self.chart
 
     def get_OLHCV(self, target_datetime: datetime) -> OLHCV:
-        for i in self.olhcv:
+        if self.olhcvs is None:
+            self._generate_OLHCV_list()
+        for i in self.olhcvs:
             diff: timedelta = i.time - target_datetime
             if abs(diff.total_seconds()) < 30.0:  # 1分足で取得することを想定している
                 return i
@@ -45,11 +49,11 @@ class TradeSimulator:
         high = int(input[4])
         low = int(input[5])
         close = int(input[6])
-        volume = int(input[7])
+        volume = float(input[7])
         return OLHCV(unix, dt, input[2], open, high, low, close, volume)
 
     def get_all_OLHCV(self) -> list[OLHCV]:
-        return self.olhcv
+        return self.olhcvs
 
     def get_chart_head(self, lines: int) -> list:
         return self.chart[:lines]
@@ -66,7 +70,7 @@ class TradeSimulator:
         return len(self.chart)
 
     def _generate_OLHCV_list(self) -> None:
-        self.olhcv: list[OLHCV] = [
+        self.olhcvs: list[OLHCV] = [
             self.generate_OLHCV_from_cryptodatadownload_style_list(i)
             for i in self.chart
         ]
