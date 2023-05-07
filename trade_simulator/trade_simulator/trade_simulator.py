@@ -1,15 +1,25 @@
 import csv
 from datetime import datetime, timedelta
+
 from .olhcv import OLHCV
 
 
 class TradeSimulator:
-    def __init__(self, input_path: str = None) -> None:
+    def __init__(self, input_path: str = None, olhcv_list: list[OLHCV] = None) -> None:
+        # csv 読み込みと olhcv リスト注入だと後者が優先される
         if input_path is not None:  # test fixture 導入までは引数 None を認める
-            with open(input_path) as f:
-                reader = csv.reader(f)
-                self.chart = [row for row in reader]
-                self.chart.pop(0)  # 先頭行はカラム名なので除去
+            self.read_csv(input_path=input_path)
+        if olhcv_list is not None:
+            self.set_OLHCV_list(olhcvs=olhcv_list)
+
+    def read_csv(self, input_path: str) -> None:
+        with open(input_path) as f:
+            reader = csv.reader(f)
+            self.chart = [row for row in reader]
+            self.chart.pop(0)  # 先頭行はカラム名なので除去
+
+    def set_OLHCV_list(self, olhcvs: list[OLHCV]) -> None:
+        self.olhcv = olhcvs
 
     def get_all_chart(self) -> list[list]:
         return self.chart
@@ -23,9 +33,14 @@ class TradeSimulator:
 
     @staticmethod
     def generate_OLHCV_from_cryptodatadownload_style_list(input: list) -> OLHCV:
+        """
+        cryptodatadownload のサイトで取得できる csv を
+        読み込んだ list から OLHCV オブジェクトリストを生成する
+        """
+
         unix = int(input[0])
         format = "%Y-%m-%d %H:%M:%S"
-        dt = datetime.datetime.strptime(input[1], format)
+        dt = datetime.strptime(input[1], format)
         open = int(input[3])
         high = int(input[4])
         low = int(input[5])
@@ -51,4 +66,7 @@ class TradeSimulator:
         return len(self.chart)
 
     def _generate_OLHCV_list(self) -> None:
-        self.olhcv: list[OLHCV] = [self.generate_OLHCV_from_cryptodatadownload_style_list(i) for i in self.chart]
+        self.olhcv: list[OLHCV] = [
+            self.generate_OLHCV_from_cryptodatadownload_style_list(i)
+            for i in self.chart
+        ]

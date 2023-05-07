@@ -1,6 +1,24 @@
-from trade_simulator.trade_simulator import TradeSimulator
-from trade_simulator.olhcv import OLHCV
 from datetime import datetime
+
+from trade_simulator.olhcv import OLHCV
+from trade_simulator.trade_simulator import TradeSimulator
+
+
+def test_read_csv():
+    target = TradeSimulator()
+    target.read_csv("tests/fixture/btc_usd.csv")
+    assert len(target.chart) == 9
+    assert target.chart[0] == [
+        "1682638980",
+        "2023-04-27 23:43:00",
+        "BTC/USD",
+        "29422",
+        "29422",
+        "29415",
+        "29415",
+        "0.00120342",
+        "35.3985993",
+    ]
 
 
 def test_generate_collect_OLHCV():
@@ -14,8 +32,10 @@ def test_generate_collect_OLHCV():
     cl = 1222
     vl = 101010
 
-    collect = OLHCV(unix_time=ut, time=t, symbol=sym, open=op, low=lo, high=hi, close=cl, volume=vl)
+    collect = OLHCV(
+        unix_time=ut, time=t, symbol=sym, open=op, low=lo, high=hi, close=cl, volume=vl
+    )
     input = [str(ut), t_str, sym, str(op), str(lo), str(hi), str(cl), str(vl)]
-    ts = TradeSimulator(None)
+    ts = TradeSimulator()
 
-    assert ts._generate_OLHCV_from_cryptodatadownload_style_list(input) == collect
+    assert ts.generate_OLHCV_from_cryptodatadownload_style_list(input) == collect
