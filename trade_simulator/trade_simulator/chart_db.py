@@ -58,6 +58,11 @@ class ChartDB:
     def get_chart_head(self, lines: int) -> list:
         return self.chart[:lines]
 
+    def get_olhcv_head(self, lines: int) -> list[OLHCV]:
+        if self.olhcvs is None:
+            self._generate_OLHCV_list()
+        return self.olhcvs[:lines]
+
     def get_noise_count(self) -> dict[int, int]:
         noise = {}
         for line in self.chart:

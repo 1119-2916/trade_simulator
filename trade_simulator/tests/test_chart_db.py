@@ -31,6 +31,18 @@ def test_get_olhcv():
     assert target.unix_time == 1682638740
 
 
+def test_get_olhcv_head():
+    db = ChartDB()
+    db.read_csv("tests/fixture/btc_usd.csv")
+    target = db.get_olhcv_head(2)
+
+    assert len(target) == 2
+    assert target[0].unix_time == 1682638980
+    format = "%Y-%m-%d %H:%M:%S"
+    time = datetime.strptime("2023-04-27 23:42:00", format)
+    assert target[1].time == time
+
+
 def test_generate_collect_OLHCV():
     ut = 123456789
     t = datetime(year=1111, month=12, day=13, hour=14, minute=15, second=16)
