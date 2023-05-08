@@ -9,6 +9,5 @@ def main():
         print(f"len = {k}, cnt = {v}")
 
 
-
 if __name__ == "__main__":
     main()

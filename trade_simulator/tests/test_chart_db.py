@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from trade_simulator.olhcv import OLHCV
 from trade_simulator.chart_db import ChartDB
+from trade_simulator.olhcv import OLHCV
 
 
 def test_read_csv():
