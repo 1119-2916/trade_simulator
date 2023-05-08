@@ -1,11 +1,11 @@
 from datetime import datetime
 
 from trade_simulator.olhcv import OLHCV
-from trade_simulator.trade_simulator import TradeSimulator
+from trade_simulator.chart_db import ChartDB
 
 
 def test_read_csv():
-    target = TradeSimulator()
+    target = ChartDB()
     target.read_csv("tests/fixture/btc_usd.csv")
     assert len(target.chart) == 9
     assert target.chart[0] == [
@@ -22,11 +22,11 @@ def test_read_csv():
 
 
 def test_get_olhcv():
-    ts = TradeSimulator()
-    ts.read_csv("tests/fixture/btc_usd.csv")
+    db = ChartDB()
+    db.read_csv("tests/fixture/btc_usd.csv")
     format = "%Y-%m-%d %H:%M:%S"
     time = datetime.strptime("2023-04-27 23:39:00", format)
-    target = ts.get_OLHCV(time)
+    target = db.get_OLHCV(time)
 
     assert target.unix_time == 1682638740
 
@@ -46,6 +46,6 @@ def test_generate_collect_OLHCV():
         unix_time=ut, time=t, symbol=sym, open=op, low=lo, high=hi, close=cl, volume=vl
     )
     input = [str(ut), t_str, sym, str(op), str(lo), str(hi), str(cl), str(vl)]
-    ts = TradeSimulator()
+    db = ChartDB()
 
-    assert ts.generate_OLHCV_from_cryptodatadownload_style_list(input) == collect
+    assert db.generate_OLHCV_from_cryptodatadownload_style_list(input) == collect

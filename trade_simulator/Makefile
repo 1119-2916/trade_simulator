@@ -17,4 +17,4 @@ export:
 
 .PHONY: test
 test:
-	poetry run pytest
+	poetry run pytest --cov --cov-report=term-missing

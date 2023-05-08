@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from .olhcv import OLHCV
 
 
-class TradeSimulator:
+class ChartDB:
     def __init__(self, input_path: str = None, olhcv_list: list[OLHCV] = None) -> None:
         # csv 読み込みと olhcv リスト注入だと後者が優先される
         self.olhcvs = None
